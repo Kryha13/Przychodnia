@@ -1,0 +1,84 @@
+<!doctype html>
+<form action="">
+<html>
+    <head>
+        <meta charset = "utf-8">
+        <style>
+            body { background-color: #eee; }
+            table { border-collapse: collapse; }
+            table, tr, td, th { border: 2px solid black; padding: 5px; }
+            h1 { color: brown; }
+            a { color: green; text-decoration: none; }
+            a:hover { color: lightgreen; }
+            tr:hover { background-color: lemonchiffon; cursor: pointer; }
+            footer { border-top: 1px solid #888; margin-top: 20px; font-style: italic; font-size: 11px;}
+            ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            }
+
+            li {
+            float: left;
+            }
+
+            li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 5px 14px;
+            text-decoration: underline;
+            }
+
+            /* Change the link color to #111 (black) on hover */
+            /*li a:hover {*/
+            /*background-color: #111;*/
+            /*}*/
+        </style>
+        <title>
+        {% block title %}
+            Clinic
+        {% endblock %}
+        </title>
+    </head>
+    <body>
+{#    <center>#}
+{#        <h1>Room Booking</h1>#}
+{#        <ul>#}
+{#            <li><a href="room/new" class="button">Create new room</a> <br></li>#}
+{#            <li><a href="room/delete" class="button">Delete room</a></li>#}
+{#        </ul>#}
+{#        <br>#}
+{#        <table>#}
+{#        <tr><th>ID</th><th>Room</th><th>Capacity</th><th colspan="2">Operations</th> </tr>#}
+{#        {% for i in room %}#}
+{#            <td>#}
+{#                {{ i.id }}#}
+{#            </td>#}
+{#			<td>#}
+{#                <a href="room/details/{{ i.id }}">{{ i.name }}</a> <br>#}
+{#            </td>#}
+{#            <td>#}
+{#                {{ i.capacity }}#}
+{#            </td>#}
+{#            <td>#}
+{#                 <a href="room/modify/{{ i.id }}">Modify room</a> <br>#}
+{#            </td>#}
+{#            <td>#}
+{#                 <a href="room/delete/{{ i.id }}"><input type="submit" value="Delete room"/></a> <br>#}
+{#            </td>#}
+{#		</tr>#}
+{#            {% endfor %}#}
+{#        </table>#}
+
+        {% block footer %}
+        <footer>
+        	Copyright by Kryha13
+        </footer>
+        {% endblock %}
+    </body>
+</center>
+</html>
+    </form>

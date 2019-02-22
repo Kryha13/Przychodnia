@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.http import request
+from django.views import generic
 
 # Create your views here.
+from django.views import View
 
 
-def main_page(request):
-    return render(request, 'main_page.html')
+class MainPage(generic.TemplateView):
+    template_name = 'main_page.html'

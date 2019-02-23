@@ -21,6 +21,7 @@ class Patients(models.Model):
     name = models.TextField(max_length=30)
     surname = models.TextField(max_length=50)
     dateOfBirth = models.DateField(default=None)
+
     email = models.TextField(max_length=100, default=None)
     doctors = models.ManyToManyField(Doctors)
 

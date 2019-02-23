@@ -38,6 +38,10 @@ class RegisterView(View):
             user.set_password(password)
             user.save()
 
+            # return redirect('/')
+
+            ##  automatically login after account creation
+
             user = authenticate(username=username, password=password)
 
             if user is not None:
@@ -49,14 +53,14 @@ class RegisterView(View):
 
 
 
-
 class LoginView(View):
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('')
+            return redirect('/')
+        return render(request, 'login.html', {'form': form})
 
     def get(self, request):
         form = AuthenticationForm()

@@ -1,10 +1,29 @@
 from django.db import models
-
+from .forms import UserForm
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 # Create your models here.
+
+
+class Patient(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
+@receiver(post_save, sender=User)
+def create_user_patient(sender, instance, created, **kwargs):
+    if created:
+        Patient.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_patient(sender, instance, **kwargs):
+    instance.profile.save()
 
 
 class Doctors(models.Model):
     name = models.TextField(max_length=100)
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, null=True)
 
 
 class Rooms(models.Model):
@@ -17,21 +36,12 @@ class Categories(models.Model):
     doctor = models.OneToOneField(Doctors, on_delete=models.PROTECT)
 
 
-class Patients(models.Model):
-    name = models.TextField(max_length=30)
-    surname = models.TextField(max_length=50)
-    dateOfBirth = models.DateField(default=None)
-
-    email = models.TextField(max_length=100, default=None)
-    doctors = models.ManyToManyField(Doctors)
-
-
 class Results(models.Model):
-    patient = models.ForeignKey(Patients, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     paper = models.ImageField()
 
 
 class Accounts(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
-    patient = models.OneToOneField(Patients, on_delete=models.CASCADE)
+    patient = models.OneToOneField(Patient, on_delete=models.CASCADE)

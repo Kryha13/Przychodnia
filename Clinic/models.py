@@ -18,7 +18,7 @@ def create_user_patient(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_patient(sender, instance, **kwargs):
-    instance.profile.save()
+    instance.patient.save()
 
 
 class Doctors(models.Model):

@@ -48,6 +48,7 @@
         <h1>Welcome to our Clinic</h1>
         <ul>
             <center>
+            {% if request.user.is_authenticated %}
             <li><a href="/" class="button">Main page</a> <br></li>
             <li><a href="/" class="button">About us</a> <br></li>
             <li><a href="/doctors" class="button">Doctors</a> <br></li>
@@ -56,21 +57,24 @@
             <li><a href="/" class="button">Facilities</a></li>
             <li><a href="/" class="button">Contact us</a></li>
             <li><a href="/login" class="button">Your account</a></li>
+            <li><a href="/logout" class="button">Logout</a></li>
+            {% else %}
+            <li><a href="/" class="button">Main page</a> <br></li>
+            <li><a href="/" class="button">About us</a> <br></li>
+            <li><a href="/doctors" class="button">Doctors</a> <br></li>
+            <li><a href="/" class="button">Offer</a> <br></li>
+            <li><a href="/set_visit" class="button">Set a visit</a></li>
+            <li><a href="/" class="button">Facilities</a></li>
+            <li><a href="/" class="button">Contact us</a></li>
+            <li><a href="/login" class="button">Login</a></li>
             <li><a href="/register" class="button">Register</a></li>
-            {% if request.user.is_authenticated %}
-            <li><a href="logout" class="button">Logout</a></li>
             {% endif %}
             </center>
         </ul>
         <br>
 
-        {% block content %} {% endblock %}
-
-        {% block footer %}
-        <footer>
-        	Copyright by Kryha13
-        </footer>
-        {% endblock %}
+        {% block content %} {% endblock content %}
+    {% include 'footer.html' %}
     </body>
 </center>
 </html>

@@ -37,24 +37,26 @@ class RegisterView(View):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user.set_password(password)
+            user.is_staff = True
             user.save()
 
-            return redirect('/')
+            # return redirect('/')
 
             ##  automatically login after account creation
 
-            # user = authenticate(username=username, password=password)
-            #
-            # if user is not None:
-            #     if user.is_active:
-            #         login(request, user)
-            #         return redirect('/')
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('/')
 
         return render(request, self.template_name, {'form': form})
 
 
 class LoginView(View):
     template_name = 'login.html'
+
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():

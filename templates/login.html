@@ -5,14 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-{% extends "main_page.html" %}
+{% include "main_page.html" %}
 {% block content %}
+    <center>
   <h2>Login</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Login</button>
   </form>
-{% endblock %}
+    </center>
+{% endblock content %}
+{% include 'footer.html' %}
 </body>
 </html>

@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-{% extends "main_page.html" %}
+{% include 'main_page.html' %}
 {% block content %}
     <div class="login">
 
@@ -31,5 +31,6 @@
          </form>
      </div>
 {% endblock %}
+{% include 'footer.html' %}
 </body>
 </html>

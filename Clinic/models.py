@@ -52,4 +52,4 @@ class Messages(models.Model):
     last_name = models.TextField(max_length=50)
     email = models.EmailField(max_length=100)
     text = models.TextField()
-    patient = models.ForeignKey(Patient, null=True, on_delete=models.PROTECT)
+    patient = models.ForeignKey(User, null=True, on_delete=models.PROTECT)

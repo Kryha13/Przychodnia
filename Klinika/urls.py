@@ -29,9 +29,6 @@ urlpatterns = [
     path('set_visit', SetVisit.as_view()),
     path('logout/', logout_user),
     path('contact', ContactView.as_view()),
-    # path('logout', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
-    # url(r'^logout/$', LogoutView.as_view(), {'next_page': '/'}, name='logout'),
-    # url(r'^login/$', LogoutView.as_view(template_name='login.html'), name='login'),
 
 ]
 

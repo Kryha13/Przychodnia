@@ -90,7 +90,8 @@ class ContactView(View):
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         text = request.POST.get('text')
+        patient = User.objects.get(id=request.POST.get('user'))
 
-        Messages.objects.create(first_name=first_name, last_name=last_name, email=email, text=text)
+        Messages.objects.create(first_name=first_name, last_name=last_name, email=email, text=text, patient=patient)
 
         return redirect('/')

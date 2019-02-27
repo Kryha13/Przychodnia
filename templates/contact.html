@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact us</title>
+</head>
+<body>
+{% include 'main_page.html' %}
+
+ <div class="container">
+  <form method="post" action="/contact">
+    {% csrf_token %}
+    <center>
+    <label>First Name</label>
+    <input type="text" name="first_name" placeholder="Your name..">
+    <br>
+    <label>Last Name</label>
+    <input type="text" name="last_name" placeholder="Your last name..">
+    <br>
+    <label>Email</label>
+    <input type="text" name="email" placeholder="Your email..">
+    <br>
+{#    <label for="country">Country</label>#}
+{#    <select id="country" name="country">#}
+{#      <option value="australia">Australia</option>#}
+{#      <option value="canada">Canada</option>#}
+{#      <option value="usa">USA</option>#}
+{#    </select>#}
+
+    <label>Subject</label>
+    <textarea name="text" placeholder="Write something.." style="width:500px"></textarea>
+    <br>
+    <input type="submit" value="Send message">
+    </center>
+  </form>
+</div>
+{% include 'footer.html' %}
+
+</body>
+</html>

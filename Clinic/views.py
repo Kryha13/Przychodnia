@@ -3,7 +3,7 @@ from django.http import request
 from django.views import generic, View
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-from Clinic.models import Doctors, Accounts, User
+from Clinic.models import Doctors, Accounts, User, Messages
 from .forms import UserForm
 from django.contrib.auth.views import LogoutView
 
@@ -78,3 +78,19 @@ def logout_user(request):
 class SetVisit(generic.TemplateView):
     template_name = 'set_visit.html'
 
+
+class ContactView(View):
+    template_name ='contact.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        text = request.POST.get('text')
+
+        Messages.objects.create(first_name=first_name, last_name=last_name, email=email, text=text)
+
+        return redirect('/')

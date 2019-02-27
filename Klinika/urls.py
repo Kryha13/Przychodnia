@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
-from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, logout_user
+from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, logout_user, ContactView
 from Klinika import settings
 from django.contrib.auth.views import LogoutView
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('register', RegisterView.as_view()),
     path('set_visit', SetVisit.as_view()),
     path('logout/', logout_user),
+    path('contact', ContactView.as_view()),
     # path('logout', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     # url(r'^logout/$', LogoutView.as_view(), {'next_page': '/'}, name='logout'),
     # url(r'^login/$', LogoutView.as_view(template_name='login.html'), name='login'),

@@ -45,3 +45,11 @@ class Accounts(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
     patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
+
+
+class Messages(models.Model):
+    first_name = models.TextField(max_length=50)
+    last_name = models.TextField(max_length=50)
+    email = models.EmailField(max_length=100)
+    text = models.TextField()
+    patient = models.ForeignKey(Patient, null=True, on_delete=models.PROTECT)

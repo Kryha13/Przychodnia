@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import request
 from django.views import generic, View
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, authenticate
-from Clinic.models import Doctors, Accounts
+from django.contrib.auth import login, authenticate, logout
+from Clinic.models import Doctors, Accounts, User
 from .forms import UserForm
+from django.contrib.auth.views import LogoutView
 
 
 # Create your views here.
@@ -38,37 +39,39 @@ class RegisterView(View):
             user.set_password(password)
             user.save()
 
-            # return redirect('/')
+            return redirect('/')
 
             ##  automatically login after account creation
 
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('/')
+            # user = authenticate(username=username, password=password)
+            #
+            # if user is not None:
+            #     if user.is_active:
+            #         login(request, user)
+            #         return redirect('/')
 
         return render(request, self.template_name, {'form': form})
 
 
-
 class LoginView(View):
+    template_name = 'login.html'
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('/')
-        return render(request, 'login.html', {'form': form})
+        # return render(request, 'main_page.html')
 
     def get(self, request):
         form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
 
 
-# class SetVisit(View):
-#     def get(self, request):
+def logout_user(request):
+    logout(request)
+    return redirect('/')
+
 
 class SetVisit(generic.TemplateView):
     template_name = 'set_visit.html'

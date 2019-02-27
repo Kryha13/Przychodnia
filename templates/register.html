@@ -5,6 +5,8 @@
     <title>Title</title>
 </head>
 <body>
+{% extends "main_page.html" %}
+{% block content %}
     <div class="login">
 
          {% if messages %}
@@ -15,7 +17,7 @@
             </ul>
         {% endif %}
 
-        <h1>Create account</h1>
+        <h2>Create account</h2>
 
          <form method="post" >
              {% csrf_token %}
@@ -28,5 +30,6 @@
              </table>
          </form>
      </div>
+{% endblock %}
 </body>
 </html>

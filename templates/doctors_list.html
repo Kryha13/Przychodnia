@@ -5,12 +5,16 @@
     <title>Doctors</title>
 </head>
 <body>
+{% extends "main_page.html" %}
+{% block content %}
+<h2>Our doctors</h2>
 
-<h1>Our doctors</h1>
-        <ul>
-            {%  for i in doctors %}
-            <li> {{ i.name }} <br></li>
-            {% endfor %}
-        </ul>
+        {%  for i in doctors %}
+
+        <li> {{ i.name }} </li> <br>
+
+        {% endfor %}
+
+{% endblock %}
 </body>
 </html>

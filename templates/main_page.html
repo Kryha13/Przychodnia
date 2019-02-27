@@ -48,38 +48,23 @@
         <h1>Welcome to our Clinic</h1>
         <ul>
             <center>
-            <li><a href="" class="button">About us</a> <br></li>
-            <li><a href="doctors" class="button">Doctors</a> <br></li>
-            <li><a href="" class="button">Offer</a> <br></li>
-            <li><a href="set_visit" class="button">Set a visit</a></li>
-            <li><a href="" class="button">Facilities</a></li>
-            <li><a href="" class="button">Contact us</a></li>
-            <li><a href="login" class="button">Your account</a></li>
-            <li><a href="register" class="button">Register</a></li>
+            <li><a href="/" class="button">Main page</a> <br></li>
+            <li><a href="/" class="button">About us</a> <br></li>
+            <li><a href="/doctors" class="button">Doctors</a> <br></li>
+            <li><a href="/" class="button">Offer</a> <br></li>
+            <li><a href="/set_visit" class="button">Set a visit</a></li>
+            <li><a href="/" class="button">Facilities</a></li>
+            <li><a href="/" class="button">Contact us</a></li>
+            <li><a href="/login" class="button">Your account</a></li>
+            <li><a href="/register" class="button">Register</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="logout" class="button">Logout</a></li>
+            {% endif %}
             </center>
         </ul>
         <br>
-{#        <table>#}
-{#        <tr><th>ID</th><th>Room</th><th>Capacity</th><th colspan="2">Operations</th> </tr>#}
-{#        {% for i in room %}#}
-{#            <td>#}
-{#                {{ i.id }}#}
-{#            </td>#}
-{#			<td>#}
-{#                <a href="room/details/{{ i.id }}">{{ i.name }}</a> <br>#}
-{#            </td>#}
-{#            <td>#}
-{#                {{ i.capacity }}#}
-{#            </td>#}
-{#            <td>#}
-{#                 <a href="room/modify/{{ i.id }}">Modify room</a> <br>#}
-{#            </td>#}
-{#            <td>#}
-{#                 <a href="room/delete/{{ i.id }}"><input type="submit" value="Delete room"/></a> <br>#}
-{#            </td>#}
-{#		</tr>#}
-{#            {% endfor %}#}
-{#        </table>#}
+
+        {% block content %} {% endblock %}
 
         {% block footer %}
         <footer>

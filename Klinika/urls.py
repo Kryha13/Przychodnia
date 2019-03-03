@@ -19,7 +19,6 @@ from django.urls import path
 from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, ContactView, LogoutView, \
     ChangePasswordView, YourAccountView
 from Klinika import settings
-app_name = 'Clinic'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,7 +30,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('contact', ContactView.as_view()),
     path('your_account', YourAccountView.as_view()),
-    path('change_password', ChangePasswordView.as_view()),
+    path('change_password', ChangePasswordView.as_view(), name='change_password'),
 
 ]
 

@@ -2,6 +2,12 @@
 {% block content %}
     <center>
   <h2>Your account</h2>
+                 {% if messages %}
+
+                {% for message in messages %}
+                <font color="red">{{ message }}</font>
+                {% endfor %}
+             {% endif %}
     <a href="/change_password">Change your password</a>
     </center>
 {% endblock content %}

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import request
 from django.views import generic, View
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.views.generic import RedirectView
 
 from Clinic.models import Doctors, Accounts, User, Messages
@@ -49,7 +49,7 @@ class RegisterView(View):
                 if user is not None:
                     if user.is_active:
                         login(request, user)
-                        return redirect('/')
+                        return redirect('/your_account')
             else:
                 messages = ['Passwords do not match']
 
@@ -107,10 +107,19 @@ class YourAccountView(generic.TemplateView):
 
 
 class ChangePasswordView(View):
+    template_name = 'change_password.html'
 
     def get(self, request):
         form = PasswordChangeForm(user=request.user)
-        return render(request, 'change_password.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
 
+    def post(self, request):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages = ['Your password has been changed']
+            user.save()
+            return redirect('/your_account', {'messages': messages})
 
-
+        return render(request, self.template_name, {'form': form})

@@ -18,9 +18,7 @@
                 {% for message in messages %}
                 <font color="red">{{ message }}</font>
                 {% endfor %}
-
-            </ul>
-        {% endif %}
+             {% endif %}
          <form method="post" >
              {% csrf_token %}
              <table>

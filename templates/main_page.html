@@ -49,6 +49,7 @@
     </center>
     {% if request.user.is_authenticated %}
     <label>Zalogowany jako: {{ user.first_name }}</label>
+        <p></p>
     {% endif %}
         <ul>
             <center>
@@ -59,7 +60,7 @@
             <li><a href="/" class="button">Offer</a> <br></li>
             <li><a href="/" class="button">Facilities</a></li>
             <li><a href="/contact" class="button">Contact us</a></li>
-            <li><a href="/" class="button">Your account</a></li>
+            <li><a href="/your_account" class="button">Your account</a></li>
             <li><a href="/set_visit" class="button">Set a visit</a></li>
             <li><a href="{% url 'logout' %}" class="button">Logout</a></li>
             {% else %}

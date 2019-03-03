@@ -1,7 +1,8 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import request
 from django.views import generic, View
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login, authenticate, logout
 from django.views.generic import RedirectView
 
@@ -37,22 +38,23 @@ class RegisterView(View):
             user = form.save(commit=False)
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user.set_password(password)
-            user.is_staff = True
-            user.save()
-
-            # return redirect('/')
-
+            password_conf = form.cleaned_data['password_conf']
+            if password == password_conf:
+                user.set_password(password)
+                user.is_staff = True
+                user.save()
             ##  automatically login after account creation
+                user = authenticate(username=username, password=password)
 
-            user = authenticate(username=username, password=password)
+                if user is not None:
+                    if user.is_active:
+                        login(request, user)
+                        return redirect('/')
+            else:
+                messages = ['Passwords do not match']
 
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('/')
+            return render(request, self.template_name, {'form': form, 'messages': messages})
 
-        return render(request, self.template_name, {'form': form})
 
 
 class LoginView(View):
@@ -63,7 +65,7 @@ class LoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('/')
+            return redirect('/your_account')
 
     def get(self, request):
         form = AuthenticationForm()
@@ -98,3 +100,17 @@ class ContactView(View):
         Messages.objects.create(first_name=first_name, last_name=last_name, email=email, text=text, patient=patient)
 
         return redirect('/')
+
+
+class YourAccountView(generic.TemplateView):
+    template_name = 'my_account.html'
+
+
+class ChangePasswordView(View):
+
+    def get(self, request):
+        form = PasswordChangeForm(user=request.user)
+        return render(request, 'change_password.html', {'form': form})
+
+
+

@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
-from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, ContactView, LogoutView
+from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, ContactView, LogoutView, \
+    ChangePasswordView, YourAccountView
 from Klinika import settings
 app_name = 'Clinic'
 
@@ -29,6 +30,8 @@ urlpatterns = [
     path('set_visit', SetVisit.as_view()),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('contact', ContactView.as_view()),
+    path('your_account', YourAccountView.as_view()),
+    path('change_password', ChangePasswordView.as_view()),
 
 ]
 

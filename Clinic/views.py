@@ -3,9 +3,10 @@ from django.http import request
 from django.views import generic, View
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
+from django.views.generic import RedirectView
+
 from Clinic.models import Doctors, Accounts, User, Messages
 from .forms import UserForm
-from django.contrib.auth.views import LogoutView
 
 
 # Create your views here.
@@ -63,16 +64,18 @@ class LoginView(View):
             user = form.get_user()
             login(request, user)
             return redirect('/')
-        # return render(request, 'main_page.html')
 
     def get(self, request):
         form = AuthenticationForm()
         return render(request, self.template_name, {'form': form})
 
 
-def logout_user(request):
-    logout(request)
-    return redirect('/')
+class LogoutView(RedirectView):
+    url = '/'
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super(LogoutView, self).get(request, *args, **kwargs)
 
 
 class SetVisit(generic.TemplateView):

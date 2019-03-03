@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
-from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, logout_user, ContactView
+from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, ContactView, LogoutView
 from Klinika import settings
-from django.contrib.auth.views import LogoutView
+app_name = 'Clinic'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +27,7 @@ urlpatterns = [
     path('login/', LoginView.as_view()),
     path('register', RegisterView.as_view()),
     path('set_visit', SetVisit.as_view()),
-    path('logout/', logout_user),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('contact', ContactView.as_view()),
 
 ]

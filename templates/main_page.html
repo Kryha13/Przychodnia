@@ -46,6 +46,10 @@
     <body>
     <center>
         <h1>Welcome to our Clinic</h1>
+    </center>
+    {% if request.user.is_authenticated %}
+    <label>Zalogowany jako: {{ user.first_name }}</label>
+    {% endif %}
         <ul>
             <center>
             {% if request.user.is_authenticated %}
@@ -57,7 +61,7 @@
             <li><a href="/contact" class="button">Contact us</a></li>
             <li><a href="/" class="button">Your account</a></li>
             <li><a href="/set_visit" class="button">Set a visit</a></li>
-            <li><a href="/logout" class="button">Logout</a></li>
+            <li><a href="{% url 'logout' %}" class="button">Logout</a></li>
             {% else %}
             <li><a href="/" class="button">Main page</a> <br></li>
             <li><a href="/" class="button">About us</a> <br></li>

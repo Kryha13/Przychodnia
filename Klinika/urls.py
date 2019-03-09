@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
 from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, ContactView, LogoutView, \
-    ChangePasswordView, YourAccountView
+    ChangePasswordView, YourAccountView, ActivateView
 from Klinika import settings
 
 urlpatterns = [
@@ -26,6 +26,7 @@ urlpatterns = [
     path('doctors', DoctorsView.as_view()),
     path('login/', LoginView.as_view()),
     path('register', RegisterView.as_view()),
+    path('activate/<uidb64>/<token>/', ActivateView.as_view(), name='activate'),
     path('set_visit', SetVisit.as_view()),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('contact', ContactView.as_view()),

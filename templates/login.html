@@ -9,6 +9,12 @@
 {% block content %}
     <center>
   <h2>Login</h2>
+    {% if messages %}
+
+    {% for message in messages %}
+    <font color="red">{{ message }}</font>
+    {% endfor %}
+    {% endif %}
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

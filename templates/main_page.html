@@ -51,6 +51,12 @@
     <label>Zalogowany jako: {{ user.first_name }}</label>
         <p></p>
     {% endif %}
+    {% if messages %}
+
+    {% for message in messages %}
+    <font color="red">{{ message }}</font>
+    {% endfor %}
+    {% endif %}
         <ul>
             <center>
             {% if request.user.is_authenticated %}

@@ -1,12 +1,18 @@
 from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
-from django.http import request
+from django.http import request, HttpResponse
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic, View
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.views.generic import RedirectView
-
+from django.contrib.auth.models import User
 from Clinic.models import Doctors, Accounts, User, Messages
+from Clinic.tokens import account_activation_token
 from .forms import UserForm
 
 
@@ -42,19 +48,55 @@ class RegisterView(View):
             if password == password_conf:
                 user.set_password(password)
                 user.is_staff = True
+                user.is_active = False
                 user.save()
-            ##  automatically login after account creation
-                user = authenticate(username=username, password=password)
-
-                if user is not None:
-                    if user.is_active:
-                        login(request, user)
-                        return redirect('/your_account')
+                # user = authenticate(username=username, password=password)
+                current_site = get_current_site(request)
+                mail_subject = 'Activate your clinic account.'
+                message = render_to_string('activate_email.html', {
+                    'user': user,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                    'token': account_activation_token.make_token(user),
+                })
+                to_email = form.cleaned_data.get('email')
+                email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+                )
+                email.send()
+                messages.success(request, 'Please confirm your email address by activation link to complete the registration')
+                return redirect('/')
+                # if user is not None:
+                #     if user.is_active:
+                #         login(request, user)
+                #         return redirect('/your_account')
             else:
-                messages = ['Passwords do not match']
+                messages.error(request, 'Passwords did not match')
 
-            return render(request, self.template_name, {'form': form, 'messages': messages})
+        return render(request, self.template_name, {'form': form})
 
+
+class ActivateView(View):
+    template_name = 'main_page.html'
+
+    def get(self,request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            messages.error(request, 'chujdupa')
+            return redirect('/')
+        if user is not None:
+            if account_activation_token.check_token(user, token):
+                user.is_active = True
+                user.save()
+                login(request, user)
+                messages.success(request, 'Email confirmed. Now you can login.')
+                return redirect('/')
+        else:
+            messages.error(request, 'Activation link is invalid')
+            return redirect('/')
+        return render(request, self.template_name)
 
 
 class LoginView(View):
@@ -66,6 +108,9 @@ class LoginView(View):
             user = form.get_user()
             login(request, user)
             return redirect('/your_account')
+        else:
+            messages.error(request, 'Wrong username or password')
+            return redirect('/login')
 
     def get(self, request):
         form = AuthenticationForm()
@@ -118,8 +163,10 @@ class ChangePasswordView(View):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages = ['Your password has been changed']
+            # messages = ['Your password has been changed']
             user.save()
-            return redirect('/your_account', {'messages': messages})
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('/your_account')
 
         return render(request, self.template_name, {'form': form})
+

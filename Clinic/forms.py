@@ -25,10 +25,10 @@ class VisitsHistoryForm(forms.ModelForm):
         fields = ['doctor', 'date']
 
 
-# class TreatmentHistoryForm(forms.ModelForm):
-#     class Meta:
-#         model = Results
-#         fields = ['paper']
+class TreatmentHistoryForm(forms.ModelForm):
+    class Meta:
+        model = Results
+        fields = ['paper']
 
 
 hours = {

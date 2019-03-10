@@ -44,11 +44,6 @@ class Categories(models.Model):
     doctor = models.OneToOneField(Doctors, on_delete=models.PROTECT)
 
 
-class Results(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    paper = models.ImageField()
-
-
 class Accounts(models.Model):
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=30)
@@ -71,3 +66,9 @@ class Visits(models.Model):
 
     def __str__(self):
         return str('{} - {}'.format(self.doctor, self.date))
+
+
+class Results(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    visit = models.ForeignKey(Visits, on_delete=models.CASCADE, default=None)
+    paper = models.ImageField()

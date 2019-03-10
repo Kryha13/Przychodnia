@@ -147,9 +147,13 @@ class SetVisit(View):
             visit.doctor = form.cleaned_data.get('doctor')
             visit.date = form.cleaned_data.get('date')
             visit.hour = form.cleaned_data.get('hour')
-            visit.save()
-            messages.success(request, 'Your visit has been set')
-            return redirect('/your_account')
+            if Visits.objects.filter(hour=visit.hour, doctor=visit.doctor, date=visit.date).exists():
+                messages.error(request, 'This term is already booked')
+                return redirect('/set_visit')
+            else:
+                visit.save()
+                messages.success(request, 'Your visit has been set')
+                return redirect('/your_account')
         return render(request, self.template_name, {'form': form})
 
 
@@ -212,16 +216,16 @@ class VisitsHistoryView(generic.ListView):
         return Visits.objects.filter(patient=self.request.user.id)
 
 
-# class TreatmentHistoryView(View):
-#     template_name = 'treatment_history.html'
-#     form_class = TreatmentHistoryForm
-#
-#     def get(self, request):
-#         form = self.form_class
-#         return render(request, self.template_name, {'form': form})
-#
-#     def post(self, request):
-#         return redirect('/your_account')
+class TreatmentHistoryView(View):
+    template_name = 'treatment_history.html'
+    form_class = TreatmentHistoryForm
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        return redirect('/your_account')
 
 
 class ChangePasswordView(View):

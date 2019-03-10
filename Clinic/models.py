@@ -1,5 +1,4 @@
 from django.db import models
-from .forms import UserForm
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -8,6 +7,10 @@ from django.db.models.signals import post_save
 
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)
+
 
 
 @receiver(post_save, sender=User)
@@ -21,14 +24,19 @@ def save_user_patient(sender, instance, **kwargs):
     instance.patient.save()
 
 
-class Doctors(models.Model):
-    name = models.TextField(max_length=100)
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, null=True)
-
-
 class Rooms(models.Model):
     roomNumber = models.SmallIntegerField(default=None)
-    doctor = models.OneToOneField(Doctors, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.roomNumber)
+
+
+class Doctors(models.Model):
+    name = models.TextField(max_length=100)
+    room = models.OneToOneField(Rooms, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Categories(models.Model):
@@ -53,3 +61,13 @@ class Messages(models.Model):
     email = models.EmailField(max_length=100)
     text = models.TextField()
     patient = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+
+
+class Visits(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT)
+    doctor = models.ForeignKey(Doctors, on_delete=models.CASCADE)
+    date = models.DateField()
+    hour = models.TimeField()
+
+    def __str__(self):
+        return str('{} - {}'.format(self.doctor, self.date))

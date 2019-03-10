@@ -1,0 +1,18 @@
+{% include "main_page.html" %}
+{% block content %}
+    <center>
+  <h2>Treatment history</h2>
+    {% if messages %}
+
+    {% for message in messages %}
+    <font color="red">{{ message }}</font>
+    {% endfor %}
+    {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.table }}
+    <button type="submit">Back to your profile</button>
+  </form>
+    </center>
+{% endblock content %}
+{% include 'footer.html' %}

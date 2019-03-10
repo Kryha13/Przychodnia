@@ -7,8 +7,13 @@
                 {% for message in messages %}
                 <font color="red">{{ message }}</font>
                 {% endfor %}
-             {% endif %}
-    <a href="/change_password">Change your password</a>
+             {% endif %} <br>
+    <a href="/edit_profile">Edit profile informations</a><br>
+    <a href="/change_password">Change your password</a><br>
+    <a href="/set_visit">Set a visit</a><br>
+    <a href="/visits_history">Visits history</a><br>
+    <a href="/treatment_history">History of treatment</a><br>
+    <a href="/logout">Logout</a><br>
     </center>
 {% endblock content %}
 {% include 'footer.html' %}

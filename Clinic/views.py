@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -11,9 +13,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, Pass
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.views.generic import RedirectView
 from django.contrib.auth.models import User
-from Clinic.models import Doctors, Accounts, User, Messages
+from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient
 from Clinic.tokens import account_activation_token
-from .forms import UserForm
+from .forms import UserForm, EditProfileForm, VisitsHistoryForm, TreatmentHistoryForm, SetVisitForm
 
 
 # Create your views here.
@@ -91,7 +93,7 @@ class ActivateView(View):
                 user.is_active = True
                 user.save()
                 login(request, user)
-                messages.success(request, 'Email confirmed. Now you can login.')
+                messages.success(request, 'Email confirmed. You are logged in now.')
                 return redirect('/')
         else:
             messages.error(request, 'Activation link is invalid')
@@ -125,12 +127,34 @@ class LogoutView(RedirectView):
         return super(LogoutView, self).get(request, *args, **kwargs)
 
 
-class SetVisit(generic.TemplateView):
+class SetVisit(View):
     template_name = 'set_visit.html'
+    form_class = SetVisitForm
+
+    def get(self, request):
+        form = self.form_class(
+            initial={
+                'patient': request.user,
+                'date': date.today(),
+            })
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            visit = form.save(commit=False)
+            visit.patient = form.cleaned_data.get('patient')
+            visit.doctor = form.cleaned_data.get('doctor')
+            visit.date = form.cleaned_data.get('date')
+            visit.hour = form.cleaned_data.get('hour')
+            visit.save()
+            messages.success(request, 'Your visit has been set')
+            return redirect('/your_account')
+        return render(request, self.template_name, {'form': form})
 
 
 class ContactView(View):
-    template_name ='contact.html'
+    template_name = 'contact.html'
 
     def get(self, request):
         return render(request, self.template_name)
@@ -149,6 +173,55 @@ class ContactView(View):
 
 class YourAccountView(generic.TemplateView):
     template_name = 'my_account.html'
+
+
+class EditProfileView(View):
+    template_name = 'edit_profile.html'
+    form_class = EditProfileForm
+
+    def get(self, request):
+        user = request.user
+        form = self.form_class(initial={
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'username': user.username,
+        })
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        user = request.user
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # first_name = form.cleaned_data['first_name']
+            # last_name = form.cleaned_data['last_name']
+            user.first_name =form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.email = form.cleaned_data['email']
+            user.save()
+            messages.success(request, 'Your changes have been saved')
+            return redirect('/your_account')
+        return render(request, self.template_name, {'form': form})
+
+
+class VisitsHistoryView(generic.ListView):
+    template_name = 'visits_history.html'
+    context_object_name = 'visits'
+
+    def get_queryset(self):
+        return Visits.objects.filter(patient=self.request.user.id)
+
+
+# class TreatmentHistoryView(View):
+#     template_name = 'treatment_history.html'
+#     form_class = TreatmentHistoryForm
+#
+#     def get(self, request):
+#         form = self.form_class
+#         return render(request, self.template_name, {'form': form})
+#
+#     def post(self, request):
+#         return redirect('/your_account')
 
 
 class ChangePasswordView(View):

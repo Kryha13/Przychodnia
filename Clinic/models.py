@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='static/media/', blank=True)
 
     def __str__(self):
         return str(self.user)

@@ -1,6 +1,7 @@
 {% include "main_page.html" %}
 {% block content %}
     <center>
+    {% csrf_token %}
   <h2>Your account</h2>
                  {% if messages %}
 
@@ -8,6 +9,19 @@
                 <font color="red">{{ message }}</font>
                 {% endfor %}
              {% endif %} <br>
+    <p>Your profile image</p>
+    {% if patient.image %}
+          <img src="{{ patient.image.url }}"> <br>
+        <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>{{ form }} <input type="submit" value="Change image"/></p> <br>
+        </form>
+    {% else %}
+        <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>{{ form }} <input type="submit" value="Add image"/></p> <br>
+        </form>
+    {% endif %}
     <a href="/edit_profile">Edit profile informations</a><br>
     <a href="/change_password">Change your password</a><br>
     <a href="/set_visit">Set a visit</a><br>

@@ -13,9 +13,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, Pass
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.views.generic import RedirectView
 from django.contrib.auth.models import User
+
 from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results
 from Clinic.tokens import account_activation_token
-from .forms import UserForm, EditProfileForm, VisitsHistoryForm, TreatmentHistoryForm, SetVisitForm
+from .forms import UserForm, EditProfileForm, VisitsHistoryForm, TreatmentHistoryForm, SetVisitForm, YourAccountForm
 
 
 # Create your views here.
@@ -178,8 +179,24 @@ class ContactView(View):
         return redirect('/')
 
 
-class YourAccountView(generic.TemplateView):
+class YourAccountView(View):
     template_name = 'my_account.html'
+    form_class = YourAccountForm
+
+    def get(self, request):
+        form = self.form_class
+        patient = Patient.objects.get(user=request.user)
+        return render(request, self.template_name, {'form': form, 'patient': patient})
+
+    def post(self, request):
+        patient = Patient.objects.get(user=request.user)
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            patient.image = form.cleaned_data['image']
+            patient.save()
+            messages.success(request, 'Your profile image has been saved')
+            return redirect('/your_account')
+        return render(request, self.template_name, {'form': form, 'patient': patient})
 
 
 class EditProfileView(View):

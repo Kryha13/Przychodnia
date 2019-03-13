@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from Clinic.models import Visits, Results, Doctors
+from Clinic.models import Visits, Results, Doctors, Patient
 from django import forms
 from django.forms import ValidationError, widgets
 
@@ -51,3 +51,9 @@ class SetVisitForm(forms.ModelForm):
     class Meta:
         model = Visits
         fields = ['patient', 'doctor', 'date', 'hour']
+
+
+class YourAccountForm(forms.Form):
+    image = forms.ImageField()
+
+

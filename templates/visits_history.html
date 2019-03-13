@@ -1,22 +1,3 @@
-{#{% include "main_page.html" %}#}
-{#{% block content %}#}
-{#    <center>#}
-{#  <h2>Visits history</h2>#}
-{#    {% if messages %}#}
-{##}
-{#    {% for message in messages %}#}
-{#    <font color="red">{{ message }}</font>#}
-{#    {% endfor %}#}
-{#    {% endif %}#}
-{#  <form method="post">#}
-{#    {% csrf_token %}#}
-{#    {{ form.table }}#}
-{#    <button type="submit">Back to your profile</button>#}
-{#  </form>#}
-{#    </center>#}
-{#{% endblock content %}#}
-{#{% include 'footer.html' %}#}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +11,7 @@
 <h2>Your previous visits</h2>
 
         {%  for i in visits %}
-        <a href="/"><li> {{ i }}</li></a> <br>
+        <a href="/visit/{{ i.id }}"><li> {{ i }}</li></a> <br>
         {% endfor %}
     </center>
 {% endblock %}

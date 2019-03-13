@@ -65,10 +65,11 @@ class Visits(models.Model):
     hour = models.TimeField()
 
     def __str__(self):
-        return str('{} - {}'.format(self.doctor, self.date))
+        return str('{} - {} - {}'.format(self.doctor, self.date, self.hour))
 
 
 class Results(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     visit = models.ForeignKey(Visits, on_delete=models.CASCADE, default=None)
-    paper = models.ImageField()
+    paper = models.ImageField(upload_to='static/media/', blank=True)
+

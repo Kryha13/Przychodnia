@@ -28,7 +28,7 @@ class VisitsHistoryForm(forms.ModelForm):
 class TreatmentHistoryForm(forms.ModelForm):
     class Meta:
         model = Results
-        fields = ['paper']
+        fields = ['patient', 'visit', 'paper']
 
 
 hours = {

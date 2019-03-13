@@ -16,8 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, ContactView, LogoutView, \
-    ChangePasswordView, YourAccountView, ActivateView, EditProfileView, VisitsHistoryView, TreatmentHistoryView
+    ChangePasswordView, YourAccountView, ActivateView, EditProfileView, VisitsHistoryView, TreatmentHistoryView, \
+    SingleVisitView
 from Klinika import settings
 
 urlpatterns = [
@@ -34,7 +37,12 @@ urlpatterns = [
     path('change_password', ChangePasswordView.as_view(), name='change_password'),
     path('edit_profile', EditProfileView.as_view(), name='edit_profile'),
     path('visits_history', VisitsHistoryView.as_view(), name='visits_history'),
-    path('treatment_history', TreatmentHistoryView.as_view(), name='treatment_history'),
+    path('visit/<visit_id>', SingleVisitView.as_view(), name='single_visit'),
+    path('treatment_history', TreatmentHistoryView.as_view(), name='results_view'),
 
 ]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 

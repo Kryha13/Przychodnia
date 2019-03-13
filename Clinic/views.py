@@ -13,7 +13,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, Pass
 from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.views.generic import RedirectView
 from django.contrib.auth.models import User
-from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient
+from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results
 from Clinic.tokens import account_activation_token
 from .forms import UserForm, EditProfileForm, VisitsHistoryForm, TreatmentHistoryForm, SetVisitForm
 
@@ -66,7 +66,8 @@ class RegisterView(View):
                     mail_subject, message, to=[to_email]
                 )
                 email.send()
-                messages.success(request, 'Please confirm your email address by activation link to complete the registration')
+                messages.success(request, 'Please confirm your email address by '
+                                          'activation link to complete the registration')
                 return redirect('/')
                 # if user is not None:
                 #     if user.is_active:
@@ -147,7 +148,8 @@ class SetVisit(View):
             visit.doctor = form.cleaned_data.get('doctor')
             visit.date = form.cleaned_data.get('date')
             visit.hour = form.cleaned_data.get('hour')
-            if Visits.objects.filter(hour=visit.hour, doctor=visit.doctor, date=visit.date).exists():
+            if Visits.objects.filter(hour=visit.hour, doctor=visit.doctor,
+                                     date=visit.date).exists():
                 messages.error(request, 'This term is already booked')
                 return redirect('/set_visit')
             else:
@@ -170,7 +172,8 @@ class ContactView(View):
         text = request.POST.get('text')
         patient = User.objects.get(id=request.POST.get('user'))
 
-        Messages.objects.create(first_name=first_name, last_name=last_name, email=email, text=text, patient=patient)
+        Messages.objects.create(first_name=first_name, last_name=last_name,
+                                email=email, text=text, patient=patient)
 
         return redirect('/')
 
@@ -216,16 +219,26 @@ class VisitsHistoryView(generic.ListView):
         return Visits.objects.filter(patient=self.request.user.id)
 
 
+class SingleVisitView(View):
+    template_name = 'single_visit.html'
+
+    def get(self, request, visit_id):
+        patient = request.user.id
+        if Results.objects.filter(patient=patient, visit=Visits.objects.get(pk=visit_id)).exists():
+            results = Results.objects.filter(patient=patient, visit=Visits.objects.get(pk=visit_id))
+            return render(request, self.template_name, {'results': results})
+        else:
+            messages.error(request, 'There are no results available for this visit yet.')
+            return render(request, self.template_name)
+
+
 class TreatmentHistoryView(View):
     template_name = 'treatment_history.html'
-    form_class = TreatmentHistoryForm
 
     def get(self, request):
-        form = self.form_class
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        return redirect('/your_account')
+        patient = request.user.id
+        results = Results.objects.filter(patient=patient)
+        return render(request, self.template_name, {'results': results})
 
 
 class ChangePasswordView(View):

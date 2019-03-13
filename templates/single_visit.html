@@ -2,14 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>History of treatment</title>
+    <title>Visit</title>
 </head>
 <body>
 {% include "main_page.html" %}
 {% block content %}
     <center>
-<h2>Your history of treatment</h2>
-
+<h2>Visit details</h2>
+        {% if messages %}
+            {% for message in messages %}
+            <font color="red">{{ message }}</font>
+            {% endfor %}
+        {% endif %}
         {%  for i in results %}
         <li>{{ i.visit }}</li><br>
             {% if i.paper is not None %}

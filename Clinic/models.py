@@ -35,6 +35,8 @@ class Rooms(models.Model):
 class Doctors(models.Model):
     name = models.TextField(max_length=100)
     room = models.OneToOneField(Rooms, on_delete=models.PROTECT)
+    description = models.TextField(default=None, null=True, blank=True)
+    image = models.ImageField(upload_to='static/media/', blank=True)
 
     def __str__(self):
         return str(self.name)
@@ -56,7 +58,7 @@ class Messages(models.Model):
     last_name = models.TextField(max_length=50)
     email = models.EmailField(max_length=100)
     text = models.TextField()
-    patient = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    patient = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
 
 class Visits(models.Model):

@@ -1,18 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Doctors</title>
-</head>
-<body>
-{% include "main_page.html" %}
+{% extends "base.html" %}
 {% block content %}
 <h2>Our doctors</h2>
 
-        {%  for i in doctors %}
-        <a href="/"><li> {{ i.name }}</li></a> <br>
-        {% endfor %}
+   {% for doctor in doctors %}
+       <article class="media content-section">
+           <div class="media-body">
+               <a class="nav-item nav-link" href="{% url 'doctor_info' doctor_id=doctor.id %}">{{ doctor.name }}</a>
+           </div>
+       </article>
+   {% endfor %}
+{% endblock content %}
 
-{% endblock %}
-</body>
-</html>

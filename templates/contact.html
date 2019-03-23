@@ -1,59 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Contact us</title>
-</head>
-<body>
-{% include 'main_page.html' %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
 
  <div class="container">
   <form method="post" action="/contact">
     {% csrf_token %}
     <center>
-        {% if request.user.is_authenticated %}
-    <label>First Name</label>
-    <input type="text" name="first_name" value={{ user.first_name }}>
-    <br>
-    <label>Last Name</label>
-    <input type="text" name="last_name" value={{ user.last_name }}>
-    <br>
-    <label>Email</label>
-    <input type="text" name="email" value={{ user.email }}>
-    <br>
-    <label>User ID</label>
-    <input type="text" name="user" value={{ user.id }}>
-    <br>
-    <label>Subject</label>
-    <textarea name="text" placeholder="Write something.." style="width:500px"></textarea>
-    <br>
-    <input type="submit" value="Send message">
-        {% else %}
-    <label>First Name</label>
-    <input type="text" name="first_name" placeholder="Your name..">
-    <br>
-    <label>Last Name</label>
-    <input type="text" name="last_name" placeholder="Your last name..">
-    <br>
-    <label>Email</label>
-    <input type="text" name="email" placeholder="Your email..">
-    <br>
-    <label>Subject</label>
-    <textarea name="text" placeholder="Write something.." style="width:500px"></textarea>
-    <br>
-    <input type="submit" value="Send message">
-        {% endif %}
-{#    <label for="country">Country</label>#}
-{#    <select id="country" name="country">#}
-{#      <option value="australia">Australia</option>#}
-{#      <option value="canada">Canada</option>#}
-{#      <option value="usa">USA</option>#}
-{#    </select>#}
-
+    {{ form|crispy }}
+    <button type="submit">Send message</button>
     </center>
   </form>
 </div>
-{% include 'footer.html' %}
-
-</body>
-</html>
+{% endblock content %}

@@ -1,5 +1,10 @@
-{% include "main_page.html" %}
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load avatar_tags %}
 {% block content %}
+    <center>
+{% avatar user 65 class="rounded-circle account-img" id="user_avatar" %}
+<a href="{% url 'avatar_change' %}">Change your avatar</a> </center>
     <center>
     {% csrf_token %}
   <h2>Your account</h2>
@@ -9,19 +14,6 @@
                 <font color="red">{{ message }}</font>
                 {% endfor %}
              {% endif %} <br>
-    <p>Your profile image</p>
-    {% if patient.image %}
-          <img src="{{ patient.image.url }}"> <br>
-        <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p>{{ form }} <input type="submit" value="Change image"/></p> <br>
-        </form>
-    {% else %}
-        <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p>{{ form }} <input type="submit" value="Add image"/></p> <br>
-        </form>
-    {% endif %}
     <a href="/edit_profile">Edit profile informations</a><br>
     <a href="/change_password">Change your password</a><br>
     <a href="/set_visit">Set a visit</a><br>
@@ -30,5 +22,20 @@
     <a href="/logout">Logout</a><br>
     </center>
 {% endblock content %}
-{% include 'footer.html' %}
-</body>
+
+
+
+{#adding image in classic way#}
+{#    <p>Your profile image</p>#}
+{#    {% if patient.image %}#}
+{#          <img src="{{ patient.image.url }}"> <br>#}
+{#        <form method="post" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#        <p>{{ form|crispy }} <input type="submit" value="Change image"/></p> <br>#}
+{#        </form>#}
+{#    {% else %}#}
+{#        <form method="post" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#        <p>{{ form|crispy }} <input type="submit" value="Add image"/></p> <br>#}
+{#        </form>#}
+{#    {% endif %}#}

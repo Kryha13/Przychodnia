@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>History of treatment</title>
-</head>
-<body>
-{% include "main_page.html" %}
+{% extends "base.html" %}
 {% block content %}
     <center>
 <h2>Your history of treatment</h2>
@@ -18,6 +11,4 @@
             <br>
         {% endfor %}
     </center>
-{% endblock %}
-</body>
-</html>
+{% endblock content %}

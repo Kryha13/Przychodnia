@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from Clinic.models import Visits, Results, Doctors, Patient
+from Clinic.models import Visits, Results, Doctors, Patient, Messages
 from django import forms
 from django.forms import ValidationError, widgets
 
@@ -11,6 +11,20 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'username', 'password', 'password_conf']
+
+
+class ContactForm(forms.ModelForm):
+    patient = forms.CharField(
+        widget=forms.TextInput(attrs={'readonly': 'readonly'})
+    )
+    first_name = forms.CharField(widget=forms.TextInput)
+    last_name = forms.CharField(widget=forms.TextInput)
+    email = forms.CharField(widget=forms.TextInput)
+    text = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = Messages
+        fields = ['patient', 'first_name', 'last_name', 'email', 'text']
 
 
 class EditProfileForm(forms.ModelForm):
@@ -55,5 +69,6 @@ class SetVisitForm(forms.ModelForm):
 
 class YourAccountForm(forms.Form):
     image = forms.ImageField()
+
 
 

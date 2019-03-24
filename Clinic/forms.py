@@ -1,7 +1,22 @@
 from django.contrib.auth.models import User
-from Clinic.models import Visits, Results, Doctors, Patient, Messages
+from Clinic.models import Visits, Results, Doctors, Patient, Messages, Facility
 from django import forms
 from django.forms import ValidationError, widgets
+from mapwidgets.widgets import GoogleStaticMapWidget, GoogleStaticOverlayMapWidget, GooglePointFieldWidget
+from django import forms
+from Clinic.models import Facility
+from mapwidgets.widgets import GoogleStaticMapWidget
+
+
+class FacilityDetailForm(forms.ModelForm):
+    name = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+
+    class Meta:
+        model = Facility
+        fields = ("name", "coordinates")
+        widgets = {
+            'coordinates': GoogleStaticMapWidget(zoom=12, size="240x240"),
+        }
 
 
 class UserForm(forms.ModelForm):
@@ -57,6 +72,7 @@ hours = {
 
 class SetVisitForm(forms.ModelForm):
 
+    patient = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     date = forms.CharField(widget=forms.SelectDateWidget)
     hour = forms.ChoiceField(choices=hours)
 

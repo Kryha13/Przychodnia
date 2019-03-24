@@ -108,14 +108,6 @@ class ActivateView(View):
         return render(request, self.template_name)
 
 
-class LogoutView(RedirectView):
-    url = '/'
-
-    def get(self, request, *args, **kwargs):
-        logout(request)
-        return super(LogoutView, self).get(request, *args, **kwargs)
-
-
 class SetVisit(View):
     template_name = 'set_visit.html'
     form_class = SetVisitForm

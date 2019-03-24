@@ -2,7 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 # Create your models here.
+
+
+class Facility(models.Model):
+    name = models.TextField(max_length=100)
+    coordinates = models.PointField(help_text="To generate the map for your location")
 
 
 class Patient(models.Model):

@@ -10,10 +10,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic, View
 from django.contrib.auth.forms import  PasswordChangeForm
 from django.contrib.auth import login, update_session_auth_hash
+from django.views.generic import UpdateView
 
-from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results
+from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results, Facility
 from Clinic.tokens import account_activation_token
-from .forms import UserForm, EditProfileForm, SetVisitForm, YourAccountForm, ContactForm
+from .forms import UserForm, EditProfileForm, SetVisitForm, YourAccountForm, ContactForm, FacilityDetailForm
+
 
 # Create your views here.
 
@@ -108,7 +110,7 @@ class SetVisit(View):
     def get(self, request):
         form = self.form_class(
             initial={
-                'patient': request.user,
+                'patient': request.user.first_name + " " + request.user.last_name,
                 'date': date.today(),
             })
         return render(request, self.template_name, {'form': form})
@@ -246,4 +248,10 @@ class ChangePasswordView(View):
             messages.success(request, 'Your password was successfully updated!')
             return redirect('/your_account')
         return render(request, self.template_name, {'form': form})
+
+
+class FacilityDetailView(UpdateView):
+    form_class = FacilityDetailForm
+    model = Facility
+    template_name = "facility_detail.html"
 

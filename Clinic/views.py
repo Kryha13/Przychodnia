@@ -4,23 +4,19 @@ from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
-from django.http import request, HttpResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic, View
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
-from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
-from django.views.generic import RedirectView
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import  PasswordChangeForm
+from django.contrib.auth import login, update_session_auth_hash
 
 from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results
 from Clinic.tokens import account_activation_token
-from .forms import UserForm, EditProfileForm, VisitsHistoryForm, TreatmentHistoryForm, SetVisitForm, YourAccountForm, \
-    ContactForm
-
+from .forms import UserForm, EditProfileForm, SetVisitForm, YourAccountForm, ContactForm
 
 # Create your views here.
+
 
 class MainPage(generic.TemplateView):
     template_name = 'main_page.html'
@@ -54,7 +50,6 @@ class RegisterView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             password_conf = form.cleaned_data['password_conf']
             if password == password_conf:
@@ -62,7 +57,6 @@ class RegisterView(View):
                 user.is_staff = True
                 user.is_active = False
                 user.save()
-                # user = authenticate(username=username, password=password)
                 current_site = get_current_site(request)
                 mail_subject = 'Activate your clinic account.'
                 message = render_to_string('activate_email.html', {
@@ -81,7 +75,6 @@ class RegisterView(View):
                 return redirect('/')
             else:
                 messages.error(request, 'Passwords did not match')
-
         return render(request, self.template_name, {'form': form})
 
 
@@ -93,7 +86,7 @@ class ActivateView(View):
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-            messages.error(request, 'chujdupa')
+            messages.error(request, 'User does not exists')
             return redirect('/')
         if user is not None:
             if account_activation_token.check_token(user, token):
@@ -199,8 +192,6 @@ class EditProfileView(View):
         user = request.user
         form = self.form_class(request.POST)
         if form.is_valid():
-            # first_name = form.cleaned_data['first_name']
-            # last_name = form.cleaned_data['last_name']
             user.first_name =form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
             user.email = form.cleaned_data['email']
@@ -251,11 +242,8 @@ class ChangePasswordView(View):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)
-            # messages = ['Your password has been changed']
             user.save()
             messages.success(request, 'Your password was successfully updated!')
             return redirect('/your_account')
-
         return render(request, self.template_name, {'form': form})
 

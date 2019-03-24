@@ -32,19 +32,22 @@ class Rooms(models.Model):
         return str(self.roomNumber)
 
 
+class Categories(models.Model):
+    name = models.TextField(max_length=100)
+
+    def str(self):
+        return self.name
+
+
 class Doctors(models.Model):
     name = models.TextField(max_length=100)
     room = models.OneToOneField(Rooms, on_delete=models.PROTECT)
     description = models.TextField(default=None, null=True, blank=True)
+    category = models.ForeignKey(Categories, on_delete=models.PROTECT)
     image = models.ImageField(upload_to='static/media/', blank=True)
 
     def __str__(self):
-        return str(self.name)
-
-
-class Categories(models.Model):
-    name = models.TextField(max_length=100)
-    doctor = models.OneToOneField(Doctors, on_delete=models.PROTECT)
+        return self.name
 
 
 class Accounts(models.Model):

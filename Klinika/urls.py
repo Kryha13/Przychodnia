@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.conf.urls import url
 from django.urls import path, include
-from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, ContactView, LogoutView, \
+from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, ContactView, \
     ChangePasswordView, YourAccountView, ActivateView, EditProfileView, VisitsHistoryView, TreatmentHistoryView, \
     SingleVisitView, DoctorInfoView
 from Klinika import settings
@@ -37,10 +37,12 @@ urlpatterns = [
          auth_views.PasswordResetView.as_view(
              template_name='password_reset.html'),
          name='password-reset'),
+    path('logout/',
+         auth_views.LogoutView.as_view(template_name='logout.html'),
+         name='logout'),
     path('register', RegisterView.as_view(), name='register'),
     path('activate/<uidb64>/<token>/', ActivateView.as_view(), name='activate'),
     path('set_visit', SetVisit.as_view(), name='set_visit'),
-    path('logout/', LogoutView.as_view(), name='logout'),
     path('contact', ContactView.as_view(), name='contact'),
     path('your_account', YourAccountView.as_view(), name='your_account'),
     path('change_password', ChangePasswordView.as_view(), name='change_password'),

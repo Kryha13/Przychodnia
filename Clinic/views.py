@@ -16,7 +16,8 @@ from django.contrib.auth.models import User
 
 from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results
 from Clinic.tokens import account_activation_token
-from .forms import UserForm, EditProfileForm, VisitsHistoryForm, TreatmentHistoryForm, SetVisitForm, YourAccountForm
+from .forms import UserForm, EditProfileForm, VisitsHistoryForm, TreatmentHistoryForm, SetVisitForm, YourAccountForm, \
+    ContactForm
 
 
 # Create your views here.
@@ -31,6 +32,14 @@ class DoctorsView(generic.ListView):
 
     def get_queryset(self):
         return Doctors.objects.all()
+
+
+class DoctorInfoView(View):
+    template_name = 'doctor_info.html'
+
+    def get(self, request, doctor_id):
+        doctor = Doctors.objects.get(id=doctor_id)
+        return render(request, self.template_name, {'doctor': doctor})
 
 
 class RegisterView(View):
@@ -70,10 +79,6 @@ class RegisterView(View):
                 messages.success(request, 'Please confirm your email address by '
                                           'activation link to complete the registration')
                 return redirect('/')
-                # if user is not None:
-                #     if user.is_active:
-                #         login(request, user)
-                #         return redirect('/your_account')
             else:
                 messages.error(request, 'Passwords did not match')
 
@@ -81,7 +86,7 @@ class RegisterView(View):
 
 
 class ActivateView(View):
-    template_name = 'main_page.html'
+    template_name = 'base.html'
 
     def get(self,request, uidb64, token):
         try:
@@ -145,10 +150,6 @@ class SetVisit(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             visit = form.save(commit=False)
-            visit.patient = form.cleaned_data.get('patient')
-            visit.doctor = form.cleaned_data.get('doctor')
-            visit.date = form.cleaned_data.get('date')
-            visit.hour = form.cleaned_data.get('hour')
             if Visits.objects.filter(hour=visit.hour, doctor=visit.doctor,
                                      date=visit.date).exists():
                 messages.error(request, 'This term is already booked')
@@ -162,21 +163,28 @@ class SetVisit(View):
 
 class ContactView(View):
     template_name = 'contact.html'
+    form_class = ContactForm
 
     def get(self, request):
-        return render(request, self.template_name)
+        patient = request.user
+        if patient.is_authenticated:
+            form = self.form_class(initial={
+                'first_name': patient.first_name,
+                'last_name': patient.last_name,
+                'email': patient.email,
+                'patient': patient,
+            })
+        else:
+            form = self.form_class
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        text = request.POST.get('text')
-        patient = User.objects.get(id=request.POST.get('user'))
-
-        Messages.objects.create(first_name=first_name, last_name=last_name,
-                                email=email, text=text, patient=patient)
-
-        return redirect('/')
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your message has been sent')
+            return redirect('/')
+        return render(request, self.template_name, {'form': form})
 
 
 class YourAccountView(View):

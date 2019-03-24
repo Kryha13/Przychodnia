@@ -31,7 +31,7 @@ class DoctorsView(generic.ListView):
     context_object_name = 'doctors'
 
     def get_queryset(self):
-        return Doctors.objects.all()
+        return Doctors.objects.all().order_by('category__name')
 
 
 class DoctorInfoView(View):
@@ -106,24 +106,6 @@ class ActivateView(View):
             messages.error(request, 'Activation link is invalid')
             return redirect('/')
         return render(request, self.template_name)
-
-
-class LoginView(View):
-    template_name = 'login.html'
-
-    def post(self, request):
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('/your_account')
-        else:
-            messages.error(request, 'Wrong username or password')
-            return redirect('/login')
-
-    def get(self, request):
-        form = AuthenticationForm()
-        return render(request, self.template_name, {'form': form})
 
 
 class LogoutView(RedirectView):

@@ -14,26 +14,35 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.conf.urls import url
-from django.urls import path
+from django.urls import path, include
+from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, ContactView, LogoutView, \
+    ChangePasswordView, YourAccountView, ActivateView, EditProfileView, VisitsHistoryView, TreatmentHistoryView, \
+    SingleVisitView, DoctorInfoView
+from Klinika import settings
 from django.conf import settings
 from django.conf.urls.static import static
-from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, LoginView, ContactView, LogoutView, \
-    ChangePasswordView, YourAccountView, ActivateView, EditProfileView, VisitsHistoryView, TreatmentHistoryView, \
-    SingleVisitView
-from Klinika import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', MainPage.as_view()),
-    path('doctors', DoctorsView.as_view()),
-    path('login/', LoginView.as_view()),
-    path('register', RegisterView.as_view()),
+    path('avatar/', include('avatar.urls')),
+    path('', MainPage.as_view(), name='main'),
+    path('doctors', DoctorsView.as_view(), name='doctors'),
+    path('doctor_info/<doctor_id>', DoctorInfoView.as_view(), name='doctor_info'),
+    path('login/',
+         auth_views.LoginView.as_view(template_name='login.html'),
+         name='login'),
+    path('password-reset/',
+         auth_views.PasswordResetView.as_view(
+             template_name='password_reset.html'),
+         name='password-reset'),
+    path('register', RegisterView.as_view(), name='register'),
     path('activate/<uidb64>/<token>/', ActivateView.as_view(), name='activate'),
-    path('set_visit', SetVisit.as_view()),
+    path('set_visit', SetVisit.as_view(), name='set_visit'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('contact', ContactView.as_view()),
-    path('your_account', YourAccountView.as_view()),
+    path('contact', ContactView.as_view(), name='contact'),
+    path('your_account', YourAccountView.as_view(), name='your_account'),
     path('change_password', ChangePasswordView.as_view(), name='change_password'),
     path('edit_profile', EditProfileView.as_view(), name='edit_profile'),
     path('visits_history', VisitsHistoryView.as_view(), name='visits_history'),

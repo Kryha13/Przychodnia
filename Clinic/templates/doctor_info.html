@@ -12,7 +12,7 @@
             <br>
              <p>Description:</p>
                 <p>{{ doctor.description }}</p><br>
-            {% if doctor.image is not None %}
+            {% if doctor.image %}
                 <img src="{{ doctor.image.url }}">
             {% endif %}
             <br>

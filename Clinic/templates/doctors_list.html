@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+
 <h2>Our doctors</h2>
 
    {% for doctor in doctors %}
        <article class="media content-section">
            <div class="media-body">
-               <a class="nav-item nav-link" href="{% url 'doctor_info' doctor_id=doctor.id %}">{{ doctor.name }}</a>
+               <a class="nav-item nav-link" href="{% url 'doctor_info' doctor_id=doctor.id %}">{{ doctor.name }} - {{ doctor.category.name }}</a>
            </div>
        </article>
    {% endfor %}

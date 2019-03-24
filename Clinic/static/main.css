@@ -84,3 +84,6 @@ a.article-title:hover {
 }
 
 footer { border-top: 1px solid #888; margin-top: 20px; font-style: italic; font-size: 11px;}
+
+a:hover { color: green; }
+tr:hover { background-color: lemonchiffon; cursor: pointer; }

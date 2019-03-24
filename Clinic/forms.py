@@ -14,9 +14,7 @@ class UserForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
-    patient = forms.CharField(
-        widget=forms.TextInput(attrs={'readonly': 'readonly'})
-    )
+    patient = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     first_name = forms.CharField(widget=forms.TextInput)
     last_name = forms.CharField(widget=forms.TextInput)
     email = forms.CharField(widget=forms.TextInput)

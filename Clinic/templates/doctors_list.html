@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-
+<center>
 <h2>Our doctors</h2>
+</center>
 
+{% for category in categories %}
+    <h7>{{ category.name }}</h7>
    {% for doctor in doctors %}
+       {% if doctor.category.name == category.name %}
        <article class="media content-section">
            <div class="media-body">
-               <a class="nav-item nav-link" href="{% url 'doctor_info' doctor_id=doctor.id %}">{{ doctor.name }} - {{ doctor.category.name }}</a>
+               <a class="nav-item nav-link" href="{% url 'doctor_info' doctor_id=doctor.id %}">{{ doctor.name }}</a>
            </div>
        </article>
+       {% endif %}
    {% endfor %}
+{% endfor %}
 {% endblock content %}
 

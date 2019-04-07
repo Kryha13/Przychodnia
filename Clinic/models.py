@@ -9,7 +9,7 @@ from django.contrib.gis.geos import Point
 
 class Facility(models.Model):
     name = models.TextField(max_length=100)
-    coordinates = models.PointField(help_text="To generate the map for your location")
+    coordinates = models.PointField(help_text="Location", default=Point(1, 1))
 
 
 class Patient(models.Model):
@@ -79,6 +79,9 @@ class Visits(models.Model):
 
     def __str__(self):
         return str('{} - {} - {}'.format(self.doctor, self.date, self.hour))
+
+    def get_absolute_url(self):
+        return "/your_account"
 
 
 class Results(models.Model):

@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 
 from bootstrap_datepicker_plus import DatePickerInput
@@ -17,7 +18,7 @@ from django.views.generic.edit import ModelFormMixin
 
 from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results, Facility
 from Clinic.tokens import account_activation_token
-from .forms import UserForm, EditProfileForm, SetVisitForm, YourAccountForm, ContactForm, FacilityDetailForm
+from .forms import UserForm, EditProfileForm, YourAccountForm, ContactForm, FacilityDetailForm
 
 
 # Create your views here.
@@ -32,7 +33,7 @@ class DoctorsView(generic.ListView):
     context_object_name = 'doctors'
 
     def get_queryset(self):
-        return Doctors.objects.all().order_by('category__name')
+        return Doctors.objects.all().order_by('name')
 
 
 class DoctorInfoView(View):
@@ -131,12 +132,26 @@ class SetVisit(generic.edit.CreateView):
         self.object = form.save(commit=False)
         self.object.patient_id = self.request.user.id
         if self.model.objects.filter(hour=self.object.hour, doctor=self.object.doctor,
-                                             date=self.object.date).exists():
+                                        date=self.object.date).exists():
             messages.error(self.request, 'This term is already booked')
+            return redirect('/set_visit')
+        elif self.object.date < datetime.date.today():
+            messages.error(self.request, 'You cannot set visit with the past date')
             return redirect('/set_visit')
         else:
             self.object.save()
             messages.success(self.request, 'Your visit has been set')
+
+        current_site = get_current_site(self.request)
+        mail_subject = 'Visit confirmation'
+        message = render_to_string('confirmation_email.html', {
+            'user': self.request.user,
+            'domain': current_site.domain,
+            'object': self.object,
+        })
+        to_email = self.request.user.email
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
 
         return super(ModelFormMixin, self).form_valid(form)
 

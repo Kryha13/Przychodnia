@@ -37,10 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'Clinic',
     'Common',
     'crispy_forms',
     'avatar',
+    'mapwidgets',
 
 ]
 
@@ -83,7 +85,7 @@ WSGI_APPLICATION = 'Project.wsgi.application'
 DATABASES = {
     'default': {
         'NAME': 'klinika', ## nazwa bazy danych
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'USER': 'postgres',
         'PASSWORD': 'coderslab',
         'HOST': 'localhost'
@@ -127,7 +129,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media')
 
 
@@ -136,12 +138,29 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'krystian.qaz123@gmail.com'
-EMAIL_HOST_PASSWORD = 'mamaqaz123'
+EMAIL_HOST_PASSWORD = 'password'
 EMAIL_PORT = 587
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "Clinic/static"),
+
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 AVATAR_THUMB_FORMAT = 'PNG'
+
+MAP_WIDGETS = {
+    "GoogleStaticMapWidget": (
+        ("zoom", 15),
+        ("size", "320x320"),
+    ),
+    "GoogleStaticMapMarkerSettings": (
+        ("color", "green"),
+    ),
+    "GOOGLE_MAP_API_KEY": "AIzaSyAIteEMVi2thcMIDdK_zBKMHOF_3oeMehs",
+}
+
+
+
+
+

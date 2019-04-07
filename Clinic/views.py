@@ -1,5 +1,7 @@
 from datetime import date
 
+from bootstrap_datepicker_plus import DatePickerInput
+from django import forms
 from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
@@ -11,6 +13,7 @@ from django.views import generic, View
 from django.contrib.auth.forms import  PasswordChangeForm
 from django.contrib.auth import login, update_session_auth_hash
 from django.views.generic import UpdateView
+from django.views.generic.edit import ModelFormMixin
 
 from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results, Facility
 from Clinic.tokens import account_activation_token
@@ -103,31 +106,39 @@ class ActivateView(View):
         return render(request, self.template_name)
 
 
-class SetVisit(View):
-    template_name = 'set_visit.html'
-    form_class = SetVisitForm
+class SetVisit(generic.edit.CreateView):
+    model = Visits
+    fields = ['doctor', 'date', 'hour']
+    template_name = 'visits_form.html'
+    hours = {
+        ('8:00', '8:00'),
+        ('9:00', '9:00'),
+        ('10:00', '10:00'),
+        ('11:00', '11:00'),
+        ('12:00', '12:00'),
+        ('13:00', '13:00'),
+        ('14:00', '14:00'),
+        ('15:00', '15:00')
+    }
 
-    def get(self, request):
-        form = self.form_class(
-            initial={
-                'patient': request.user.first_name + " " + request.user.last_name,
-                'date': date.today(),
-            })
-        return render(request, self.template_name, {'form': form})
+    def get_form(self):
+        form = super().get_form()
+        form.fields['date'].widget = DatePickerInput()
+        form.fields['hour'] = forms.ChoiceField(choices=self.hours)
+        return form
 
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            visit = form.save(commit=False)
-            if Visits.objects.filter(hour=visit.hour, doctor=visit.doctor,
-                                     date=visit.date).exists():
-                messages.error(request, 'This term is already booked')
-                return redirect('/set_visit')
-            else:
-                visit.save()
-                messages.success(request, 'Your visit has been set')
-                return redirect('/your_account')
-        return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.patient_id = self.request.user.id
+        if self.model.objects.filter(hour=self.object.hour, doctor=self.object.doctor,
+                                             date=self.object.date).exists():
+            messages.error(self.request, 'This term is already booked')
+            return redirect('/set_visit')
+        else:
+            self.object.save()
+            messages.success(self.request, 'Your visit has been set')
+
+        return super(ModelFormMixin, self).form_valid(form)
 
 
 class ContactView(View):
@@ -141,7 +152,6 @@ class ContactView(View):
                 'first_name': patient.first_name,
                 'last_name': patient.last_name,
                 'email': patient.email,
-                'patient': patient,
             })
         else:
             form = self.form_class
@@ -150,7 +160,9 @@ class ContactView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            form.save()
+            message = form.save(commit=False)
+            message.patient = request.user
+            message.save()
             messages.success(request, 'Your message has been sent')
             return redirect('/')
         return render(request, self.template_name, {'form': form})
@@ -254,4 +266,6 @@ class FacilityDetailView(UpdateView):
     form_class = FacilityDetailForm
     model = Facility
     template_name = "facility_detail.html"
+
+
 

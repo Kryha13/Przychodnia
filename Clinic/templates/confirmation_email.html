@@ -1,0 +1,15 @@
+{% autoescape off %}
+
+Hi {{ user.first_name }} {{ user.last_name }},
+
+We are pleased to confirm your visit set in our Clinic. Thank you and have a nice day.
+
+Visit details:
+Doctor: {{ object.doctor }}
+Date: {{ object.date }}
+Hour: {{ object.hour }}
+
+Regards,
+BestClinic
+
+{% endautoescape %}

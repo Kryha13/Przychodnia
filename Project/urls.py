@@ -19,14 +19,14 @@ from django.conf.urls import url
 from django.urls import path, include
 from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, ContactView, \
     ChangePasswordView, YourAccountView, ActivateView, EditProfileView, VisitsHistoryView, TreatmentHistoryView, \
-    SingleVisitView, DoctorInfoView
-from Project import settings
+    SingleVisitView, DoctorInfoView, FacilityDetailView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Common.urls')),
+    path('facility/<int:pk>', FacilityDetailView.as_view(), name="facility"),
     path('avatar/', include('avatar.urls')),
     path('', MainPage.as_view(), name='main'),
     path('doctors', DoctorsView.as_view(), name='doctors'),

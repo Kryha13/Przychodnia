@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'avatar',
     'mapwidgets',
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
+    'jquery',
 
 ]
 
@@ -129,7 +132,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media')
 
 
@@ -138,11 +141,12 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'krystian.qaz123@gmail.com'
-EMAIL_HOST_PASSWORD = 'password'
+EMAIL_HOST_PASSWORD = 'mamaqaz123'
 EMAIL_PORT = 587
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "Clinic/static"),
+    os.path.join(BASE_DIR, "static"),
 
 ]
 

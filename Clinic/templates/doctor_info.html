@@ -3,18 +3,17 @@
 {% block content %}
     <center>
 <h2>Doctor {{ doctor.name }}</h2>
-{#        {% if messages %}#}
-{#            {% for message in messages %}#}
-{#            <font color="red">{{ message }}</font>#}
-{#            {% endfor %}#}
-{#        {% endif %}#}
-            <p>Room: {{ doctor.room }}</p><br>
-            <br>
-             <p>Description:</p>
-                <p>{{ doctor.description }}</p><br>
-            {% if doctor.image %}
-                <img src="{{ doctor.image.url }}">
-            {% endif %}
-            <br>
+    <p>Room: {{ doctor.room }}</p><br>
+    {% if doctor.image %}
+        <img width="200" height="300" src="{{ doctor.image.url }}">
+    {% endif %}
+    <article class="media content-section">
+        <div class="media-body">
+         <h5>Description:</h5>
+            <p>{{ doctor.description }}</p><br>
+        </div>
+    </article>
+    <br>
     </center>
 {% endblock content %}
+

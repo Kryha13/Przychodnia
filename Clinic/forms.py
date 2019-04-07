@@ -6,6 +6,7 @@ from mapwidgets.widgets import GoogleStaticMapWidget, GoogleStaticOverlayMapWidg
 from django import forms
 from Clinic.models import Facility
 from mapwidgets.widgets import GoogleStaticMapWidget
+from bootstrap_datepicker_plus import DatePickerInput
 
 
 class FacilityDetailForm(forms.ModelForm):
@@ -15,7 +16,7 @@ class FacilityDetailForm(forms.ModelForm):
         model = Facility
         fields = ("name", "coordinates")
         widgets = {
-            'coordinates': GoogleStaticMapWidget(zoom=12, size="240x240"),
+            'coordinates': GoogleStaticMapWidget(),
         }
 
 
@@ -29,7 +30,6 @@ class UserForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
-    patient = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
     first_name = forms.CharField(widget=forms.TextInput)
     last_name = forms.CharField(widget=forms.TextInput)
     email = forms.CharField(widget=forms.TextInput)
@@ -37,7 +37,7 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Messages
-        fields = ['patient', 'first_name', 'last_name', 'email', 'text']
+        fields = ['first_name', 'last_name', 'email', 'text']
 
 
 class EditProfileForm(forms.ModelForm):
@@ -56,29 +56,6 @@ class TreatmentHistoryForm(forms.ModelForm):
     class Meta:
         model = Results
         fields = ['patient', 'visit', 'paper']
-
-
-hours = {
-        ('8:00', '8:00'),
-        ('9:00', '9:00'),
-        ('10:00', '10:00'),
-        ('11:00', '11:00'),
-        ('12:00', '12:00'),
-        ('13:00', '13:00'),
-        ('14:00', '14:00'),
-        ('15:00', '15:00')
-         }
-
-
-class SetVisitForm(forms.ModelForm):
-
-    patient = forms.CharField(required=False, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
-    date = forms.CharField(widget=forms.SelectDateWidget)
-    hour = forms.ChoiceField(choices=hours)
-
-    class Meta:
-        model = Visits
-        fields = ['patient', 'doctor', 'date', 'hour']
 
 
 class YourAccountForm(forms.Form):

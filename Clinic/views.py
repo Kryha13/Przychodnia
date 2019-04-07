@@ -16,7 +16,7 @@ from django.contrib.auth import login, update_session_auth_hash
 from django.views.generic import UpdateView
 from django.views.generic.edit import ModelFormMixin
 
-from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results, Facility
+from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results, Facility, Categories
 from Clinic.tokens import account_activation_token
 from .forms import UserForm, EditProfileForm, YourAccountForm, ContactForm, FacilityDetailForm
 
@@ -28,12 +28,13 @@ class MainPage(generic.TemplateView):
     template_name = 'main_page.html'
 
 
-class DoctorsView(generic.ListView):
+class DoctorsView(View):
     template_name = 'doctors_list.html'
-    context_object_name = 'doctors'
 
-    def get_queryset(self):
-        return Doctors.objects.all().order_by('name')
+    def get(self, request):
+        categories = Categories.objects.all()
+        doctors = Doctors.objects.all()
+        return render(request, self.template_name, {'categories': categories, 'doctors': doctors})
 
 
 class DoctorInfoView(View):

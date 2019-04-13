@@ -1,5 +1,4 @@
 import datetime
-from datetime import date
 
 from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
@@ -11,12 +10,12 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic, View
-from django.contrib.auth.forms import  PasswordChangeForm
-from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import login
 from django.views.generic import UpdateView
 from django.views.generic.edit import ModelFormMixin
 
-from Clinic.models import Doctors, Accounts, User, Messages, Visits, Patient, Results, Facility, Categories
+from Clinic.models import Doctors, User, Visits, Patient, Results, Facility, Categories
 from Clinic.tokens import account_activation_token
 from .forms import UserForm, EditProfileForm, YourAccountForm, ContactForm, FacilityDetailForm
 
@@ -282,6 +281,3 @@ class FacilityDetailView(UpdateView):
     form_class = FacilityDetailForm
     model = Facility
     template_name = "facility_detail.html"
-
-
-

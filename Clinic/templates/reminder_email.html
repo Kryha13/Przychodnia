@@ -1,0 +1,13 @@
+{% autoescape off %}
+Hi {{ user.first_name }} {{ user.last_name }},
+
+Please be mindful of your tomorrow visit:
+
+Doctor: {{ visit.doctor }}
+Date: {{ visit.date }}
+Hour: {{ visit.hour }}
+
+Regards,
+Clinic
+
+{% endautoescape %}

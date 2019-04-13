@@ -7,6 +7,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic, View
@@ -156,6 +157,12 @@ class SetVisit(generic.edit.CreateView):
         return super(ModelFormMixin, self).form_valid(form)
 
 
+class DeleteVisitView(generic.DeleteView):
+    model = Visits
+    template_name = 'visit_confirm_delete.html'
+    success_url = reverse_lazy('your_account')
+
+
 class ContactView(View):
     template_name = 'contact.html'
     form_class = ContactForm
@@ -235,7 +242,7 @@ class VisitsHistoryView(generic.ListView):
     context_object_name = 'visits'
 
     def get_queryset(self):
-        return Visits.objects.filter(patient=self.request.user.id)
+        return Visits.objects.filter(patient=self.request.user.id).order_by('date')
 
 
 class SingleVisitView(View):

@@ -19,7 +19,7 @@ from django.conf.urls import url
 from django.urls import path, include
 from Clinic.views import MainPage, DoctorsView, RegisterView, SetVisit, ContactView, \
     ChangePasswordView, YourAccountView, ActivateView, EditProfileView, VisitsHistoryView, TreatmentHistoryView, \
-    SingleVisitView, DoctorInfoView, FacilityDetailView
+    SingleVisitView, DoctorInfoView, FacilityDetailView, DeleteVisitView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -32,6 +32,7 @@ urlpatterns = [
     path('doctors', DoctorsView.as_view(), name='doctors'),
     path('doctor_info/<doctor_id>', DoctorInfoView.as_view(), name='doctor_info'),
     path('set_visit', SetVisit.as_view(), name='set_visit'),
+    path('cancel_visit/<pk>/', DeleteVisitView.as_view(), name='cancel_visit'),
     path('contact', ContactView.as_view(), name='contact'),
     path('your_account', YourAccountView.as_view(), name='your_account'),
     path('edit_profile', EditProfileView.as_view(), name='edit_profile'),

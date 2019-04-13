@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
     <center>
-<h2>Your previous visits</h2>
+<h2>Your visits</h2>
 
         {%  for i in visits %}
-        <a href="/visit/{{ i.id }}"><li> {{ i }}</li></a> <br>
+            <a href="/visit/{{ i.id }}"><li> {{ i }}</li></a> <button>
+            <a href="{% url 'cancel_visit' i.id %}">Cancel</a></button> <br> <br>
         {% endfor %}
     </center>
 {% endblock content %}

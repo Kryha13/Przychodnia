@@ -159,6 +159,7 @@ MAP_WIDGETS = {
     "GoogleStaticMapWidget": (
         ("zoom", 15),
         ("size", "320x320"),
+        ("thumbnail_size", "150x150"),
     ),
     "GoogleStaticMapMarkerSettings": (
         ("color", "green"),

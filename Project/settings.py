@@ -143,7 +143,7 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'krystian.qaz123@gmail.com'
-EMAIL_HOST_PASSWORD = 'mamaqaz123'
+EMAIL_HOST_PASSWORD = 'password'
 EMAIL_PORT = 587
 
 STATICFILES_DIRS = [
@@ -177,7 +177,7 @@ CELERY_TIMEZONE = 'Europe/Warsaw'
 CELERY_BEAT_SCHEDULE = {
     'email_reminder': {
             'task': 'Clinic.tasks.email_reminder',
-            'schedule': crontab(minute=56),
+            'schedule': crontab(minute=50),
         },
 }
 
